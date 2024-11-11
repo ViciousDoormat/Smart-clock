@@ -6,6 +6,7 @@
 #include "display.h"
 #include "time.h"
 #include "weather.h"
+#include "fact.h"
 
 //Arduino Cloud
 WiFiConnectionHandler ArduinoIoTPreferredConnection(ssid, password);
@@ -41,6 +42,8 @@ void setup() {
 
   timeClient.begin();
 
+  randomSeed(analogRead(D2));
+
 }
 
 void loop() {
@@ -49,17 +52,27 @@ void loop() {
   ArduinoCloud.update();
 
   if(power){
-    toggleDisplay();
+    if(toggleDisplay()) {
 
-    if(displayActive) {
-      timeClient.update();
-      printTime();
-    } else { 
-      if(newHour()) {
-      fetchWeatherData();
+      switch(currentDisplay) {
+        case Time:
+          timeClient.update();
+          printTime();
+        break;
+
+        case Weather:
+          if(newHour()) {
+            fetchWeatherData();
+          }
+          printWeather();
+        break;
+
+        case Fact:
+          printFact();
+        break;
       }
-      printWeather();
     }
+
   }
   
   display.display();

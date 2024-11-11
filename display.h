@@ -12,8 +12,6 @@
 #define SCREEN_ADDRESS 0x3C ///< See datasheet for Address; 0x3D for 128x64, 0x3C for 128x32
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 unsigned long previousMillis = millis();
-const long interval = 30000;
-bool displayActive = true;
 
 struct DisplayItem {
   String text;
@@ -25,6 +23,15 @@ struct DisplayItem {
   }
 };
 
+enum Screen {
+  Time,
+  Weather,
+  Fact
+};
+const int numDisplays = 3;
+Screen currentDisplay = Time;
+int displayDurations[numDisplays] = {30000, 15000, 20000};
+
 void displayContent(std::initializer_list<DisplayItem> items) {
   display.setTextColor(WHITE);
   display.setCursor(0, 0);
@@ -35,11 +42,13 @@ void displayContent(std::initializer_list<DisplayItem> items) {
   }
 }
 
-void toggleDisplay() {
-  if (millis() - previousMillis >= interval) {
+bool toggleDisplay() {
+  if (millis() - previousMillis >= displayDurations[currentDisplay]) {
     previousMillis = millis();
-    displayActive = !displayActive;
+    currentDisplay = static_cast<Screen>((currentDisplay + 1) % numDisplays);
+    return true;
   }
+  return false;
 }
 
 #endif

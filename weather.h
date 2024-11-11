@@ -33,9 +33,9 @@ void fetchWeatherData() {
         cloud = doc["current"]["cloud"];
         feelslike_c = doc["current"]["feelslike_c"];
       } 
-
-    http.end();
     }
+    
+    http.end();
   }
 }
 
