@@ -32,7 +32,7 @@ void setup() {
   }
 
   display.clearDisplay();
-  displayContent({ DisplayItem("Klabonga v2") });
+  displayContent({ DisplayItem("Klabonga v2", 1) });
   display.display();
 
   setup_wifi();
@@ -47,13 +47,12 @@ void setup() {
 }
 
 void loop() {
-  display.clearDisplay();
   delay(500);
   ArduinoCloud.update();
 
   if(power){
     if(toggleDisplay()) {
-
+      display.clearDisplay();
       switch(currentDisplay) {
         case Time:
           timeClient.update();
@@ -71,11 +70,9 @@ void loop() {
           printFact();
         break;
       }
+      display.display();
     }
-
   }
-  
-  display.display();
 }
 
 void setup_wifi() {

@@ -33,7 +33,7 @@ String fetchRandomFact() {
 }
 
 void printFact() {
-  displayContent({ DisplayItem(fetchRandomFact(), 1) });
+  displayContent({ DisplayItem(fetchRandomFact(), 1) }); //TODO add enters when word crosses screen border
 }
 
 #endif
