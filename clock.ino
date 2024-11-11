@@ -6,6 +6,7 @@
 #include "display.h"
 #include "time.h"
 #include "weather.h"
+#include "fact.h"
 
 //Arduino Cloud
 WiFiConnectionHandler ArduinoIoTPreferredConnection(ssid, password);
@@ -31,7 +32,7 @@ void setup() {
   }
 
   display.clearDisplay();
-  displayContent({ DisplayItem("Klabonga v2") });
+  displayContent({ DisplayItem("Klabonga v2", 1) });
   display.display();
 
   setup_wifi();
@@ -41,28 +42,37 @@ void setup() {
 
   timeClient.begin();
 
+  randomSeed(analogRead(D2));
+
 }
 
 void loop() {
-  display.clearDisplay();
   delay(500);
   ArduinoCloud.update();
 
   if(power){
-    toggleDisplay();
+    if(toggleDisplay()) {
+      display.clearDisplay();
+      switch(currentDisplay) {
+        case Time:
+          timeClient.update();
+          printTime();
+        break;
 
-    if(displayActive) {
-      timeClient.update();
-      printTime();
-    } else { 
-      if(newHour()) {
-      fetchWeatherData();
+        case Weather:
+          if(newHour()) {
+            fetchWeatherData();
+          }
+          printWeather();
+        break;
+
+        case Fact:
+          printFact();
+        break;
       }
-      printWeather();
+      display.display();
     }
   }
-  
-  display.display();
 }
 
 void setup_wifi() {
