@@ -18,7 +18,7 @@ void printTime() {
   String time = timeClient.getFormattedTime().substring(0,5);
   String day = days[timeClient.getDay()];
 
-  displayContent({DisplayItem(time, 3), DisplayItem(day)});
+  displayContent({DisplayItem(time, 4), DisplayItem(day)});
  
 }
 

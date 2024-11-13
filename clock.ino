@@ -13,7 +13,7 @@ WiFiConnectionHandler ArduinoIoTPreferredConnection(ssid, password);
 CloudSwitch power;
 void onPowerChange();
 
-
+bool justHappened = true;
 
 void setup() {
 
@@ -51,6 +51,7 @@ void loop() {
   ArduinoCloud.update();
 
   if(power){
+    justHappened = true;
     if(toggleDisplay()) {
       display.clearDisplay();
       switch(currentDisplay) {
@@ -72,6 +73,10 @@ void loop() {
       }
       display.display();
     }
+  } else if (justHappened) {
+    justHappened = false;
+    display.clearDisplay();
+    display.display();
   }
 }
 
